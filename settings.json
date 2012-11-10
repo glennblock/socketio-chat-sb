@@ -1,0 +1,8 @@
+{
+    "azure": {
+        "storageAccount": "",
+        "storageAccessKey": "",
+        "serviceBusNamespace": "",
+        "serviceBusAccessKey": ""
+    }
+}
