@@ -23,7 +23,7 @@ html
         }
       });
 
-      socket.on('usermessage', message);
+      socket.on('user message', message);
       socket.on('reconnect', function () {
         $('#lines').remove();
         message('System', 'Reconnected to the server');
@@ -38,9 +38,7 @@ html
       });
 
       function message (from, msg) {
-        if ($('#nick').val() != from) {
-           $('#lines').append($('<p>').append($('<b>').text(from), msg));
-        }
+        $('#lines').append($('<p>').append($('<b>').text(from), msg));
       }
 
       // dom manipulation
@@ -58,7 +56,7 @@ html
 
         $('#send-message').submit(function () {
           message('me', $('#message').val());
-          socket.emit('usermessage', $('#message').val());
+          socket.emit('user message', $('#message').val());
           clear();
           $('#lines').get(0).scrollTop = 10000000;
           return false;
@@ -74,6 +72,7 @@ html
         form.wrap#set-nickname
           p Please type in your nickname and press enter.
           input#nick
+          button Set
           p#nickname-err Nickname already in use
       #connecting
         .wrap Connecting to socket.io server

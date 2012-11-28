@@ -11,7 +11,7 @@ var express = require('express')
   , async = require('async')
   , conf = require('nconf');
 
-nconf.env().file({file: 'settings.json'});
+//nconf.env().file({file: 'settings.json'});
 
 /**
  * App.
@@ -53,8 +53,8 @@ app.listen(process.env.PORT || 3000, function () {
   console.log('   app listening on http://' + addr.address + ':' + addr.port);
 });
 
-var sbnamespace = nconf.get('azure:ServiceBusNamespace')
-var sbkey = nconf.get('azure:serviceBusAccessKey');
+var sbnamespace = process.env.SERVICEBUS_NAMESPACE;
+var sbkey = process.env.SERVICEBUS_ACCESS_KEY;
 
 
 var serviceBusClient = azure.createServiceBusService(sbnamespace, sbkey);
