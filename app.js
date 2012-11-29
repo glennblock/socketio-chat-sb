@@ -79,7 +79,7 @@ function setUpSocketIo(){
   serviceBusReceive('nicknames');
 
   io.sockets.on('connection', function (socket) {
-    socket.on('usermessage', function (msg) {
+    socket.on('user message', function (msg) {
       serviceBusSend([socket.nickname, msg], 'usermessage');
     });
 
