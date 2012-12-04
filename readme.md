@@ -10,7 +10,6 @@ To use this app you need to do the following
 * Clone the app (obivously)
 * Create a ServiceBus namespace in the Windows Azure portal website or use an existing namespace. Copy the access key for the namespace.
 * Deploy your app
-* Go to the Azure Portal to retrieve 
 * Set ServiceBus namespace config in the portal by adding SERVICEBUS_NAMESPACE and SERVICEBUS_ACCESS_KEY in the AppSettings section or use either our our xPlat CLI:
 
 ```
