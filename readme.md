@@ -22,7 +22,7 @@ or Powershell
 
 ```
 $site = Get-AzureWebsite [site]
-$site.AppSettings["SERVICEBUS_NAMESPACE"]="[namepsace]"
+$site.AppSettings["SERVICEBUS_NAMESPACE"]="[namespace]"
 $site.AppSettings["SERVICEBUS_ACCESS_KEY"]="[accesskey]"
 $site | Set-AzureWebsite
 ```
