@@ -1,6 +1,5 @@
 socketio-chat-sb
 ================
-
 Socket.io chat app using ServiceBus for scale out
 
 This app is a fork of the socket.io sample chat app located at https://github.com/LearnBoost/socket.io. It demonstrates how to scale out socket.io instances using Windows Azure ServiceBus.
