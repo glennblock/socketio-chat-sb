@@ -48,14 +48,10 @@ app.get('/', function (req, res) {
  * App listen.
  */
 
-app.listen(process.env.PORT || 3000, function () {
-  var addr = app.address();
-  console.log('   app listening on http://' + addr.address + ':' + addr.port);
-});
-
 var sbnamespace = process.env.SERVICEBUS_NAMESPACE;
 var sbkey = process.env.SERVICEBUS_ACCESS_KEY;
-
+console.log("SB Namespace:" + sbnamespace);
+console.log("SB Access Key:" + sbkey);
 
 var serviceBusClient = azure.createServiceBusService(sbnamespace, sbkey);
 var serviceBusSubscription = uuid.v4();
@@ -70,14 +66,10 @@ var io = sio.listen(app)
 io.configure(function () { 
   io.set("transports", ["xhr-polling"]); 
   io.set("polling duration", 50); 
-  serviceBusCreateSubscriptions();
+  serviceBusCreateTopics();
 });
 
 function setUpSocketIo(){
-  serviceBusReceive('usermessage');
-  serviceBusReceive('announcement');
-  serviceBusReceive('nicknames');
-
   io.sockets.on('connection', function (socket) {
     socket.on('usermessage', function (msg) {
       serviceBusSend([socket.nickname, msg], 'usermessage');
@@ -101,11 +93,43 @@ function setUpSocketIo(){
       serviceBusSend(nicknames, 'nicknames');
     });
   });
+  listen();
+}
+
+function listen() {
+  app.listen(process.env.PORT || 3000, function () {
+    var addr = app.address();
+    console.log('\nApp listening on http://' + addr.address + ':' + addr.port + "\n");
+    receiveMessages();
+  });
+}
+
+function receiveMessages() {
+  console.log('Receiving messages');
+  serviceBusReceive('usermessage');
+  serviceBusReceive('announcement');
+  serviceBusReceive('nicknames');
+}
+
+
+function serviceBusCreateTopics() {
+  console.log('About to create Service Bus topics');
+  async.series([
+    function(callback) {
+      serviceBusClient.createTopicIfNotExists('announcement', callback)
+    },
+    function(callback) {
+      serviceBusClient.createTopicIfNotExists('usermessage', callback)
+    },
+    function(callback) {
+      serviceBusClient.createTopicIfNotExists('nicknames', serviceBusCreateSubscriptions)
+    },
+  ]);
 }
 
 function serviceBusCreateSubscriptions()
 {
-  console.log('About to create subscriptions');
+  console.log('About to create Service Bus subscriptions');
   async.series([
       function(callback) {
         serviceBusClient.createSubscription('announcement', serviceBusSubscription, callback);
@@ -135,13 +159,13 @@ function serviceBusSend(message, topic){
 }
 
 function serviceBusReceive(topic){
-  console.log('About to receive message');
+  console.log('About to receive message for topic: ' + topic);
   serviceBusClient.receiveSubscriptionMessage(topic,
     serviceBusSubscription, {timeoutIntervalInS: 5}, 
     function messageReceived(error, message) {
       if (error) {
         if(error === 'No messages to receive'){
-          console.log('Resetting Service Bus receive');
+          console.log('No messages for topic: ' + topic + ', retrying');
           serviceBusReceive(topic);
         } else {
           console.log(error);
