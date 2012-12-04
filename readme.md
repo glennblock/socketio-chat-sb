@@ -8,8 +8,23 @@ This app is a fork of the socket.io sample chat app located at https://github.co
 To use this app you need to do the following
 
 * Clone the app (obivously)
-* Create a ServiceBus namesapce in the Windows Azure portal, or use an existing namespace.
-* Modify settings.json and put your sb namespace and key.
-* Create 3 topics within the namespace in the Azure portal: usermessage, announcement, nicknames
+* Create a ServiceBus namesapce in the Windows Azure portal website or use an existing namespace. Copy the access key for the namespace.
+* Deploy your app
+* Go to the Azure Portal to retrieve 
+* Set ServiceBus namespace config in the portal by adding SERVICEBUS_NAMESPACE and SERVICEBUS_ACCESS_KEY in the AppSettings section or use either our our xPlat CLI:
+
+```
+azure site config add 'SERVICEBUS_NAMESPACE=[namespace]' [site]
+azure site config add 'SERVICEBUS_ACCESS_KEY=[accesskey]' [site]
+```
+
+or Powershell
+
+```
+$site = Get-AzureWebsite [site]
+$site.AppSettings["SERVICEBUS_NAMESPACE"]="[namepsace]"
+$site.AppSettings["SERVICEBUS_ACCESS_KEY"]="[accesskey]"
+$site | Set-AzureWebsite
+```
 
 You can then deploy the app across multiple instances and the chats will be synchonized across instances. For example you can deploy the app to the cloud and run it on your local workstation.
